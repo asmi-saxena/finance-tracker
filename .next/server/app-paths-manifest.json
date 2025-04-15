@@ -1,0 +1,8 @@
+{
+  "/api/summary/route": "app/api/summary/route.js",
+  "/api/transactions/route": "app/api/transactions/route.js",
+  "/categories/page": "app/categories/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/page": "app/page.js",
+  "/transactions/new/page": "app/transactions/new/page.js"
+}
