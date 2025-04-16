@@ -3,38 +3,16 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 
 export function TransactionsLoading() {
   return (
-    <div className="overflow-x-auto">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Description</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
-            <TableHead className="w-[50px]"></TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {Array.from({ length: 5 }).map((_, index) => (
-            <TableRow key={index}>
-              <TableCell>
-                <div className="flex items-center gap-2">
-                  <Skeleton className="h-4 w-4 rounded-full" />
-                  <Skeleton className="h-4 w-40" />
-                </div>
-              </TableCell>
-              <TableCell>
-                <Skeleton className="h-4 w-24" />
-              </TableCell>
-              <TableCell className="text-right">
-                <Skeleton className="h-4 w-20 ml-auto" />
-              </TableCell>
-              <TableCell>
-                <Skeleton className="h-8 w-8 rounded-md" />
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+    <div className="space-y-4">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <div key={i} className="flex items-center space-x-4 rounded-md border p-4">
+          <div className="h-10 w-10 animate-pulse rounded-full bg-muted" />
+          <div className="space-y-2">
+            <div className="h-4 w-[200px] animate-pulse rounded bg-muted" />
+            <div className="h-3 w-[100px] animate-pulse rounded bg-muted" />
+          </div>
+        </div>
+      ))}
     </div>
   )
 }

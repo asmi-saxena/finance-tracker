@@ -1,20 +1,10 @@
-import { connectToDatabase } from "@/lib/mongodb"
-import { Transaction, Category } from "@/lib/models"
 import type { Transaction as TransactionType, Category as CategoryType, FinanceSummary } from "@/lib/types"
+import { mockCategories, mockTransactions } from "./mock-data"
 
 export async function getTransactions(limit?: number): Promise<TransactionType[]> {
   try {
-    await connectToDatabase()
-
-    let query = Transaction.find().populate("category").sort({ date: -1 })
-
-    if (limit) {
-      query = query.limit(limit)
-    }
-
-    const transactions = await query.exec()
-
-    return JSON.parse(JSON.stringify(transactions))
+    // Return mock data instead of fetching from MongoDB
+    return limit ? mockTransactions.slice(0, limit) : mockTransactions
   } catch (error) {
     console.error("Failed to fetch transactions:", error)
     return []
@@ -23,14 +13,8 @@ export async function getTransactions(limit?: number): Promise<TransactionType[]
 
 export async function getTransactionById(id: string): Promise<TransactionType | null> {
   try {
-    await connectToDatabase()
-    const transaction = await Transaction.findById(id).populate("category")
-
-    if (!transaction) {
-      return null
-    }
-
-    return JSON.parse(JSON.stringify(transaction))
+    // Return mock transaction by ID
+    return mockTransactions.find(t => t._id === id) || null
   } catch (error) {
     console.error("Failed to fetch transaction:", error)
     return null
@@ -39,10 +23,8 @@ export async function getTransactionById(id: string): Promise<TransactionType | 
 
 export async function getCategories(): Promise<CategoryType[]> {
   try {
-    await connectToDatabase()
-    const categories = await Category.find().sort({ name: 1 })
-
-    return JSON.parse(JSON.stringify(categories))
+    // Return mock categories
+    return mockCategories
   } catch (error) {
     console.error("Failed to fetch categories:", error)
     return []
@@ -51,14 +33,8 @@ export async function getCategories(): Promise<CategoryType[]> {
 
 export async function getCategoryById(id: string): Promise<CategoryType | null> {
   try {
-    await connectToDatabase()
-    const category = await Category.findById(id)
-
-    if (!category) {
-      return null
-    }
-
-    return JSON.parse(JSON.stringify(category))
+    // Return mock category by ID
+    return mockCategories.find(c => c._id === id) || null
   } catch (error) {
     console.error("Failed to fetch category:", error)
     return null
@@ -67,61 +43,13 @@ export async function getCategoryById(id: string): Promise<CategoryType | null> 
 
 export async function getFinanceSummary(): Promise<FinanceSummary> {
   try {
-    await connectToDatabase()
-
-    // Get all transactions
-    const transactions = await Transaction.find().populate("category")
-
-    // Calculate total income and expenses
-    let totalIncome = 0
-    let totalExpenses = 0
-
-    transactions.forEach((transaction) => {
-      if (transaction.amount > 0) {
-        totalIncome += transaction.amount
-      } else {
-        totalExpenses += Math.abs(transaction.amount)
-      }
-    })
-
-    // Calculate category summaries
-    const categoryMap = new Map()
-
-    transactions.forEach((transaction) => {
-      if (!transaction.category) return
-
-      const categoryId = transaction.category._id.toString()
-      const amount = Math.abs(transaction.amount)
-
-      if (!categoryMap.has(categoryId)) {
-        categoryMap.set(categoryId, {
-          _id: categoryId,
-          name: transaction.category.name,
-          color: transaction.category.color,
-          icon: transaction.category.icon,
-          total: 0,
-        })
-      }
-
-      categoryMap.get(categoryId).total += amount
-    })
-
-    // Convert to array and calculate percentages
-    const categorySummaries = Array.from(categoryMap.values())
-    const totalAmount = totalIncome + totalExpenses
-
-    categorySummaries.forEach((category) => {
-      category.percentage = totalAmount > 0 ? (category.total / totalAmount) * 100 : 0
-    })
-
-    // Sort by total amount (descending)
-    categorySummaries.sort((a, b) => b.total - a.total)
-
+    // Calculate finance summary using mock data
+    // This is a placeholder and should be replaced with actual implementation
     return {
-      totalIncome,
-      totalExpenses,
-      balance: totalIncome - totalExpenses,
-      categorySummaries,
+      totalIncome: 0,
+      totalExpenses: 0,
+      balance: 0,
+      categorySummaries: [],
     }
   } catch (error) {
     console.error("Failed to fetch finance summary:", error)
